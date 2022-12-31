@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
-const { Good, Auction, User } = require('../models');
+const { Good, Auction, User, sequelize } = require('../models');
+const schedule = require('node-schedule');
 
 exports.renderMain = async (req, res, next) => {
     try {
@@ -31,12 +32,33 @@ exports.renderGood = (req, res) => {
 exports.createGood = async (req, res, next) => {
     try {
         const { name, price } = req.body;
-        await Good.create({
+        const good = await Good.create({
             OwnerId: req.user.id,
             name,
             img: req.file.filename,
             price,
         });
+        const end = new Date();
+        end.setDate(end.getDate() + 1);
+        // node-schedule 에 단점은 node 서버가 종료 되면 스케줄링이 같이 죽는다.
+        const job = schedule.scheduledJobs(end, async () => {
+            const auction = await Auction.findOne({
+                where: { GoodId: good.id },
+                order: [['bid', 'DESC']],
+                limit: 1,
+            });
+            await good.setSold(auction.UserId);
+            await User.update({
+                money: sequelize.literal(`money - ${auction.bid}`)
+                // SET money = money - 1000000
+            }, {
+                where: { id: auction.UserId }
+            })
+        });
+        job.on('error', console.error);
+        job.on('success', () => {
+            console.log(`${good.id} 스케줄링 성공.`);
+        })
         res.redirect('/');
     } catch (error) {
         console.error(error);
