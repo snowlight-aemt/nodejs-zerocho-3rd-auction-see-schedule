@@ -136,3 +136,30 @@ exports.bid = async (req, res, next) => {
         next(error);
     }
 }
+
+exports.renderList = async (req, res, next) => {
+    try {
+        console.log('===============');
+        // TODO 결과는 ? 해결 : 데이터 로우로 들어온 데이터를 알아서 객체형식으로 변경핸다.
+        // 데이터 로우 (중복이 보인다.)
+        // { id, name, price, auction1.id, auction1.bid, auction1.msg }
+        // { id, name, price, auction2.id, auction2.bid, auction2.msg }
+        // { id, name, price, auction3.id, auction3.bid, auction3.msg }
+
+        // 객체 ( 리스트로 종복이 제거됨 )
+        // { id, name, price, [auction1, auction2, auction3] }
+        const goods = await Good.findAll({
+            where: { SoldId: req.user.id },
+            include: { model: Auction },
+            order: [[{ model: Auction }, 'bid', 'DESC']]
+        });
+        console.log(goods)
+        res.render('list', {
+            title: '낙찰 목록 - NodeAuction',
+            goods,
+        });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+}
