@@ -15,9 +15,12 @@ const passportConfig = require('./passport');
 
 const sse = require('./sse');
 const webSocket = require('./socket');
+const checkAuction = require('./checkAuction');
 
 const app = express();
 passportConfig();
+// TODO 테스트 필요. DB 연결 전에 ?? 했는데?
+checkAuction();
 app.set('port', process.env.PORT || 8010);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
