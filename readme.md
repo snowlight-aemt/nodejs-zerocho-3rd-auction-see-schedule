@@ -2,9 +2,11 @@
 * 서버 시간 사용하기 (sse)
 * 웹소켓 통신 (socket.io)
 
-### SSE - 클라이언트에서 서버 시간 받기
-* sse
+### Server Sent Events (SSE)
+* 서버 센트 이벤트
+* server sent events (sse)
   * 개발자 도구에 `EventStream` 탭 확인
+* 클라이언트에서 서버 시간 받기
 
 ## 노드 스케줄러
 ```
