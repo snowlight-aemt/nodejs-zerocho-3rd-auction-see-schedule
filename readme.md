@@ -92,3 +92,8 @@ User -< Auction >- Good
 ## TODO
 * 상품 등록자는 참여할 수 없게 만들기 (라우터에서 검사)
 * 경매 시간을 자유롭게 조정할 수 있도록 만들기(상품 등록시 생성할 수 있게 화면과 DB 수정)
+
+
+## Fork Url
+https://github.com/ZeroCho/nodejs-book
+https://www.youtube.com/@ZeroChoTV
